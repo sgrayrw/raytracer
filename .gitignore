@@ -13,4 +13,5 @@ build
 *~
 *.swp
 *.swo
-
+.idea/
+cmake-build-debug/

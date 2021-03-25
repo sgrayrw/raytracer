@@ -8,29 +8,29 @@
 
 class ray {
 public:
-   ray() {}
+    ray() {}
 
-   ray(const glm::point3& origin, const glm::vec3& direction)
-      : orig(origin), dir(direction)
-   {}
+    ray(const glm::point3 &origin, const glm::vec3 &direction)
+            : orig(origin), dir(direction) {}
 
-   glm::point3 origin() const  { return orig; }
-   glm::vec3 direction() const { return dir; }
+    glm::point3 origin() const { return orig; }
 
-   glm::point3 at(float t) const {
-      return orig + t*dir;
-   }
+    glm::vec3 direction() const { return dir; }
 
-   std::string str() const {
-      std::ostringstream ss;
-      ss << "position: " << orig << std::endl;
-      ss << "direction: " << dir << std::endl;
-      return ss.str();
-   }
+    glm::point3 at(float t) const {
+        return orig + t * dir;
+    }
+
+    std::string str() const {
+        std::ostringstream ss;
+        ss << "position: " << orig << std::endl;
+        ss << "direction: " << dir << std::endl;
+        return ss.str();
+    }
 
 public:
-   glm::point3 orig;
-   glm::vec3 dir;
+    glm::point3 orig;
+    glm::vec3 dir;
 };
 
 #endif
