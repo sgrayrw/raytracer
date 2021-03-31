@@ -9,11 +9,10 @@ using namespace std;
 
 color ray_color(const ray &ray) {
     vec3 unit_direction = normalize(ray.direction());
-
     float t = 0.5f * (unit_direction.y + 1.0f);
     color c1(0.5f, 0.7f, 1.0f);
     color c2(1.0);
-    color c = c1 * (1 - t) + c2 * t;
+    color c = c1 * t + c2 * (1 - t);
     return c;
 }
 

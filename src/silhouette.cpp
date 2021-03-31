@@ -21,7 +21,13 @@ color ray_color(const ray &ray) {
     if (t > 0) {
         return color(1, 0, 0);
     }
-    return color(0);
+
+    vec3 unit_direction = normalize(ray.direction());
+    t = 0.5f * (unit_direction.y + 1.0f);
+    color c1(0.5f, 0.7f, 1.0f);
+    color c2(1.0);
+    color c = c1 * t + c2 * (1 - t);
+    return c;
 }
 
 void ray_trace(ppm_image &image) {
