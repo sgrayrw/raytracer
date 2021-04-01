@@ -20,19 +20,7 @@ public:
 
     virtual bool scatter(const ray &r_in, const hit_record &rec,
                          glm::color &attenuation, ray &scattered) const override {
-        using namespace glm;
-
-        // v1
-        //vec3 unitn = normalize(rec.normal);
-        //// TODO lightPos
-        //vec3 lightPos = vec3(5, 5, 0);
-        //vec3 lightDir = normalize(lightPos - rec.p);
-        //color diffuse = max(vec3(0), dot(unitn, lightDir)) * albedo;
-        //attenuation = diffuse;
-        //return false;
-
-        // v2
-        vec3 scatter_dir = rec.normal + random_unit_vector();
+        glm::vec3 scatter_dir = rec.normal + random_unit_vector();
         if (near_zero(scatter_dir)) {
             scatter_dir = rec.normal;
         }
