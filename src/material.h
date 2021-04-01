@@ -67,10 +67,21 @@ public:
             lightPos(ilightPos),
             viewPos(iviewPos), kd(ikd), ks(iks), ka(ika), shininess(ishininess) {}
 
-    virtual bool scatter(const ray &r_in, const hit_record &hit,
-                         glm::color &attenuation, ray &scattered) const override {
-        // todo
-        attenuation = glm::color(0);
+    bool scatter(const ray &r_in, const hit_record &hit,
+                 glm::color &attenuation, ray &scattered) const override {
+        auto Ia = ka * ambientColor;
+
+        glm::vec3 unitn = normalize(hit.normal);
+        glm::vec3 lightDir = normalize(lightPos - hit.p);
+        auto Id = kd * fmax(0.0f, dot(lightDir, unitn)) * diffuseColor;
+
+        glm::vec3 viewDir = normalize(viewPos - hit.p);
+        glm::vec3 r = normalize(reflect(lightDir, unitn));
+        auto Is = ks * specColor * pow(dot(viewDir, r), shininess);
+
+        auto color = Ia + Id + Is;
+
+        attenuation = color;
         return false;
     }
 
@@ -90,11 +101,12 @@ class metal : public material {
 public:
     metal(const glm::color &a, float f) : albedo(a), fuzz(glm::clamp(f, 0.0f, 1.0f)) {}
 
-    virtual bool scatter(const ray &r_in, const hit_record &rec,
-                         glm::color &attenuation, ray &scattered) const override {
-        // todo
+    bool scatter(const ray &r_in, const hit_record &rec,
+                 glm::color &attenuation, ray &scattered) const override {
+        glm::vec3 reflected = reflect(normalize(r_in.direction()), rec.normal);
+        scattered = ray(rec.p, reflected + fuzz * random_unit_sphere());
         attenuation = albedo;
-        return false;
+        return (dot(scattered.direction(), rec.normal) > 0);
     }
 
 public:
@@ -106,11 +118,27 @@ class dielectric : public material {
 public:
     dielectric(float index_of_refraction) : ir(index_of_refraction) {}
 
-    virtual bool scatter(const ray &r_in, const hit_record &rec,
-                         glm::color &attenuation, ray &scattered) const override {
-        // todo
-        attenuation = glm::color(0);
-        return false;
+    bool scatter(const ray &r_in, const hit_record &rec,
+                 glm::color &attenuation, ray &scattered) const override {
+        attenuation = glm::color(1.0, 1.0, 1.0);
+        float refraction_ratio = rec.front_face ? (1.0f / ir) : ir;
+
+        glm::vec3 unit_direction = normalize(r_in.direction());
+        double cos_theta = fmin(dot(-unit_direction, rec.normal), 1.0);
+        double sin_theta = sqrt(1.0 - cos_theta*cos_theta);
+
+        bool cannot_refract = refraction_ratio * sin_theta > 1.0;
+        glm::vec3 direction;
+
+        if (cannot_refract) {
+            direction = reflect(unit_direction, rec.normal);
+        }
+        else {
+            direction = refract(unit_direction, rec.normal, refraction_ratio);
+        }
+
+        scattered = ray(rec.p, direction);
+        return true;
     }
 
 public:

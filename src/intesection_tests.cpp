@@ -45,6 +45,19 @@ void test_sphere(const sphere &s, const ray &r, bool hits, const hit_record &des
     }
 }
 
+void test_hit(const hittable& h, const ray& r, bool hits, const hit_record& desired) {
+    hit_record hit;
+    bool result = h.hit(r, hit);
+
+    check(result == hits, "error: ray should hit", hit, r);
+    if (hits) {
+        check(vecEquals(hit.p, desired.p), "error: position incorrect:", hit, r);
+        check(vecEquals(hit.normal, desired.normal), "error: normal incorrect:", hit, r);
+        check(equals(hit.t, desired.t), "error: hit time incorrect", hit, r);
+        check(hit.front_face == desired.front_face, "error: front facing incorrect", hit, r);
+    }
+}
+
 int main(int argc, char **argv) {
     shared_ptr<material> empty = 0;
     hit_record none = hit_record{point3(0), point3(0), -1.0f, false, empty};
@@ -75,5 +88,41 @@ int main(int argc, char **argv) {
                 true,
                 hit_record{vec3(0, 0.3432f, 1.9703f), vec3(0, 0.1716f, 0.9851f), 0.3432f, true, empty});
 
-    // TODO: Your tests here
+    // test plane
+    // 1. ray towards plane
+    plane p(point3(0, 1, 0), glm::vec3(0, 0, 1), empty);
+    test_hit(p,
+             ray(point3(0, 0, 5), vec3(0, 0, -1)),
+             true,
+             hit_record{vec3(0), vec3(0, 0, 1), 5.0f, true, empty});
+
+    // 2. another ray towards plane (not perpendicular)
+    test_hit(p,
+             ray(point3(0, 0, 4), vec3(0, 3, -4)),
+             true,
+             hit_record{vec3(0, 3, 0), vec3(0, 0, 1), 1.0f, true, empty});
+
+    // 3. ray parallel to plane
+    test_hit(p,
+             ray(point3(0, 0, 1), vec3(1, 0, 0)),
+             false,
+             none);
+
+    // 4. ray opposite to plane
+    test_hit(p,
+             ray(point3(0, 0, 5), vec3(0, 0, 1)),
+             false,
+             none);
+
+    // 5. ray starting from plane but not parallel
+    test_hit(p,
+             ray(point3(0), vec3(0, 0, -1)),
+             true,
+             hit_record{vec3(0), vec3(0, 0, 1), 0.0f, true, empty});
+
+    // 6. ray inside and parallel to plane
+    // TODO
+
+    // test triangle
+    // 1.
 }

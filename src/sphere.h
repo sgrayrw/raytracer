@@ -12,7 +12,7 @@ public:
     sphere(const glm::point3 &cen, float r, std::shared_ptr<material> m) :
             center(cen), radius(r), mat_ptr(m) {};
 
-    virtual bool hit(const ray &r, hit_record &rec) const override;
+    bool hit(const ray &r, hit_record &rec) const override;
     virtual bool hit_analytic(const ray &r, hit_record &rec) const; // just for reference
 
 public:
@@ -67,7 +67,7 @@ bool sphere::hit(const ray &r, hit_record &rec) const {
     rec.t = (lSqr > rSqr) ? s - q : s + q;
     rec.t /= glm::length(r.direction());
     rec.p = r.at(rec.t);
-    rec.mat_ptr = mat_ptr; // what does this do?
+    rec.mat_ptr = mat_ptr;
     glm::vec3 outward_normal = normalize(rec.p - center); // compute unit length normal
     rec.set_face_normal(r, outward_normal);
 
