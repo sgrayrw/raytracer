@@ -13,6 +13,8 @@ public:
              std::shared_ptr<material> m) : a(v0), b(v1), c(v2), mat_ptr(m) {};
 
     bool hit(const ray &r, hit_record &rec) const override {
+        // adapted from class
+
         auto v0 = a, v1 = b, v2 = c;
         auto e1 = v1 - v0;
         auto e2 = v2 - v0;

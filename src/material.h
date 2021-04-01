@@ -20,6 +20,7 @@ public:
 
     virtual bool scatter(const ray &r_in, const hit_record &rec,
                          glm::color &attenuation, ray &scattered) const override {
+        // adapted from class
         glm::vec3 scatter_dir = rec.normal + random_unit_vector();
         if (near_zero(scatter_dir)) {
             scatter_dir = rec.normal;
@@ -57,6 +58,7 @@ public:
 
     bool scatter(const ray &r_in, const hit_record &hit,
                  glm::color &attenuation, ray &scattered) const override {
+        // adapted from class
         auto Ia = ka * ambientColor;
 
         glm::vec3 unitn = normalize(hit.normal);
@@ -91,6 +93,7 @@ public:
 
     bool scatter(const ray &r_in, const hit_record &rec,
                  glm::color &attenuation, ray &scattered) const override {
+        // adapted from raytracer book
         glm::vec3 reflected = reflect(normalize(r_in.direction()), rec.normal);
         scattered = ray(rec.p, reflected + fuzz * random_unit_sphere());
         attenuation = albedo;
@@ -108,6 +111,7 @@ public:
 
     bool scatter(const ray &r_in, const hit_record &rec,
                  glm::color &attenuation, ray &scattered) const override {
+        // adapted from raytracer book
         attenuation = glm::color(1.0, 1.0, 1.0);
         float refraction_ratio = rec.front_face ? (1.0f / ir) : ir;
 

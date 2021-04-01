@@ -48,7 +48,7 @@ bool sphere::hit_analytic(const ray &r, hit_record &rec) const {
 }
 
 bool sphere::hit(const ray &r, hit_record &rec) const {
-    // geometric method
+    // geometric method, adapted from class
     glm::point3 l = center - r.origin();
     float s = glm::dot(l, normalize(r.direction()));
     float lSqr = glm::dot(l, l);

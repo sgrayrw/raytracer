@@ -12,6 +12,8 @@ public:
           std::shared_ptr<material> m) : a(p), n(normal), mat_ptr(m) {};
 
     bool hit(const ray &r, hit_record &rec) const override {
+        // adapted from class
+
         // t = ((a - p0) \dot n) / (v \dot n)
         float denominator = dot(r.direction(), n);
         if (denominator == 0) {

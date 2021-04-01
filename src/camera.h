@@ -25,6 +25,7 @@ public:
            glm::vec3 vup,
            float vfov, // vertical field-of-view in degrees
            float aspect_ratio) {
+        // adapted from raytracer book
         auto theta = glm::radians(vfov);
         auto h = tan(theta / 2.0f);
         auto viewport_height = 2.0f * h;
