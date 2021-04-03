@@ -15,15 +15,21 @@ public:
         // adapted from class
 
         // t = ((a - p0) \dot n) / (v \dot n)
+        float numerator = dot(a - r.origin(), n);
         float denominator = dot(r.direction(), n);
-        if (denominator == 0) {
-            // ray parallel to plane
-            return false;
-        }
 
-        rec.t = dot(a - r.origin(), n) / denominator;
-        if (rec.t < 0) {
-            return false;
+        // check if ray parallel to plane
+        if (denominator == 0) {
+            if (numerator == 0) {
+                rec.t = 0;
+            } else {
+                return false;
+            }
+        } else {
+            rec.t = numerator / denominator;
+            if (rec.t < 0) {
+                return false;
+            }
         }
 
         rec.p = r.at(rec.t);

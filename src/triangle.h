@@ -41,9 +41,14 @@ public:
 
         auto t = f * dot(e2, q);
         rec.t = t;
+
+        if (rec.t < 0) {
+            return false;
+        }
+
         rec.p = r.at(rec.t);
         rec.mat_ptr = mat_ptr;
-        glm::vec3 outward_normal = glm::vec3(0); // TODO
+        glm::vec3 outward_normal = cross(normalize(b - a), normalize(c - a));
         rec.set_face_normal(r, outward_normal);
         return true;
     }

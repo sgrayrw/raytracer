@@ -89,14 +89,15 @@ int main(int argc, char **argv) {
                 hit_record{vec3(0, 0.3432f, 1.9703f), vec3(0, 0.1716f, 0.9851f), 0.3432f, true, empty});
 
     // test plane
-    // 1. ray towards plane
     plane p(point3(0, 1, 0), glm::vec3(0, 0, 1), empty);
+
+    // 1. ray towards plane (perpendicular)
     test_hit(p,
              ray(point3(0, 0, 5), vec3(0, 0, -1)),
              true,
              hit_record{vec3(0), vec3(0, 0, 1), 5.0f, true, empty});
 
-    // 2. another ray towards plane (not perpendicular)
+    // 2. ray towards plane (not perpendicular)
     test_hit(p,
              ray(point3(0, 0, 4), vec3(0, 3, -4)),
              true,
@@ -121,8 +122,34 @@ int main(int argc, char **argv) {
              hit_record{vec3(0), vec3(0, 0, 1), 0.0f, true, empty});
 
     // 6. ray inside and parallel to plane
-    // TODO
+    test_hit(p,
+             ray(point3(0), vec3(1, 1, 0)),
+             true,
+             hit_record{vec3(0), vec3(0, 0, -1), 0.0f, false, empty});
 
     // test triangle
-    // 1.
+    triangle t(point3(0), point3(4, 0, 0), point3(0, 3, 0), empty);
+
+    // 1. ray hits triangle
+    test_hit(t,
+             ray(point3(1, 1, 1.5), vec3(0, 0, -1)),
+             true,
+             hit_record{point3(1, 1, 0), vec3(0, 0, 1), 1.5f, true, empty});
+
+    // 2 & 3. ray misses triangle
+    test_hit(t,
+             ray(point3(0, 4, 1.5), vec3(0, 0, -1)),
+             false,
+             none);
+
+    test_hit(t,
+             ray(point3(1, 1, 1.5), vec3(0, 0, 1)),
+             false,
+             none);
+
+    // 4. ray inside triangle
+    test_hit(t,
+             ray(point3(1, 1, 0), vec3(0, 0, 1)),
+             true,
+             hit_record{point3(1, 1, 0), vec3(0, 0, -1), 0.0f, false, empty});
 }
