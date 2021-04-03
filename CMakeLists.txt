@@ -113,4 +113,5 @@ target_link_libraries(raytracer ${CORE})
 add_executable(materials src/materials.cpp ${RT_SOURCES} ${SOURCES})
 target_link_libraries(materials ${CORE})
 
-
+add_executable(demo src/demo.cpp ${RT_SOURCES} ${SOURCES})
+target_link_libraries(demo ${CORE})

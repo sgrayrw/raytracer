@@ -1,10 +1,12 @@
-// Raytracer framework from https://raytracing.github.io by Peter Shirley, 2018-2020
-// alinen 2021, modified to use glm and ppm_image class
+/*
+ * Adapted from materials.cpp
+ */
 
 #include "ppm_image.h"
 #include "AGLM.h"
 #include "ray.h"
 #include "sphere.h"
+#include "plane.h"
 #include "camera.h"
 #include "material.h"
 #include "hittable_list.h"
@@ -34,7 +36,6 @@ color ray_color(const ray &r, const hittable_list &world, int depth) {
 }
 
 color normalize_color(const color &c, int samples_per_pixel) {
-    // todo: implement me!
     float scale = 1.0f / samples_per_pixel;
     float r = std::min(0.999f, std::max(0.0f, c.r * scale));
     float g = std::min(0.999f, std::max(0.0f, c.g * scale));
@@ -64,19 +65,33 @@ void ray_trace(ppm_image &image) {
     //camera cam(point3(-10,10,5), point3(0,0,-1), vec3(0,1,0), 80, aspect); // a different camera pos
 
     // World
-    shared_ptr<material> gray = make_shared<lambertian>(color(0.5f));
     shared_ptr<material> matteGreen = make_shared<lambertian>(color(0, 0.5f, 0));
     shared_ptr<material> metalRed = make_shared<metal>(color(1, 0, 0), 0.3f);
     shared_ptr<material> glass = make_shared<dielectric>(1.5f);
     shared_ptr<material> phongDefault = make_shared<phong>(camera_pos);
 
-    hittable_list world;
-    world.add(make_shared<sphere>(point3(-2.25, 0, -1), 0.5f, phongDefault));
-    world.add(make_shared<sphere>(point3(-0.75, 0, -1), 0.5f, glass));
-    world.add(make_shared<sphere>(point3(2.25, 0, -1), 0.5f, metalRed));
-    world.add(make_shared<sphere>(point3(0.75, 0, -1), 0.5f, matteGreen));
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100, gray));
+    shared_ptr<material> background = make_shared<phong>(camera_pos, color(0), 100.f);
+    shared_ptr<material> sun = make_shared<lambertian>(color(0.8, 0, 0));
+    shared_ptr<material> mercury = make_shared<lambertian>(color(63.0f / 255, 61.0f / 255, 63.0f / 255));
+    shared_ptr<material> venus = make_shared<lambertian>(color(131.f / 255, 75.f / 255, 22.f / 255));
+    shared_ptr<material> earth = make_shared<phong>(camera_pos, color(30.f / 255, 50.f / 255, 255.f / 255), 10.f);
+    shared_ptr<material> moon = make_shared<metal>(color(0.5f), 0.3f);
+    shared_ptr<material> mars = make_shared<metal>(color(120.f / 255, 79.f / 255, 59.f / 255), 0.9f);
+    shared_ptr<material> jupyter = make_shared<phong>(camera_pos, color(255.f / 255, 100.f / 255, 50.f / 255), 8.f);
+    shared_ptr<material> saturn = make_shared<phong>(camera_pos, color(246.f / 255, 200.f / 255, 116.f / 255), 10.f);
+    shared_ptr<material> uranus = make_shared<lambertian>(color(209.f / 255, 238.f / 255, 241.f / 255));
 
+    hittable_list world;
+    world.add(make_shared<plane>(point3(0, 0, -100), vec3(0, 0, 1), background));
+    world.add(make_shared<sphere>(point3(-5.5, 0, -1), 3.0f, sun));
+    world.add(make_shared<sphere>(point3(-2.1, 0, -1), 0.14f, mercury));
+    world.add(make_shared<sphere>(point3(-1.7, 0, -1), 0.2f, venus));
+    world.add(make_shared<sphere>(point3(-1.2, 0, -1), 0.25f, earth));
+    world.add(make_shared<sphere>(point3(-0.9, 0.2f, -1), 0.1f, glass));
+    world.add(make_shared<sphere>(point3(-0.65, 0, -1), 0.14f, mars));
+    world.add(make_shared<sphere>(point3(0.3, 0, -1), 0.65f, jupyter));
+    world.add(make_shared<sphere>(point3(1.7, 0, -1), 0.55f, saturn));
+    world.add(make_shared<sphere>(point3(2.8, 0, -1), 0.35f, uranus));
 
     // Ray trace
     for (int j = 0; j < height; j++) {
@@ -95,5 +110,5 @@ void ray_trace(ppm_image &image) {
         }
     }
 
-    image.save("materials.png");
+    image.save("demo.png");
 }

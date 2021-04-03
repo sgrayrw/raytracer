@@ -36,6 +36,16 @@ public:
 
 class phong : public material {
 public:
+    phong(const glm::vec3 & view,
+          const glm::color &idiffuseColor,
+          float ishininess) :
+            diffuseColor(idiffuseColor),
+            specColor(1, 1, 1),
+            ambientColor(.01f, .01f, .01f),
+            lightPos(5, 5, 0),
+            viewPos(view),
+            kd(0.45), ks(0.45), ka(0.1), shininess(ishininess) {}
+
     phong(const glm::vec3 &view) :
             diffuseColor(0, 0, 1),
             specColor(1, 1, 1),
