@@ -2,6 +2,18 @@
 
 Implements a raytracer based on the book [_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html). 
 
+## Feature Implemented
+Changing camera position
+![](img/distant_view.png)
+(A sample distant view)
+
+## Unique Image
+![](img/solar_system.png)
+(A rough image of the solar system, up to Uranus. Created by
+setting a distant plane of phong material as the background, and
+aligning the spheres representing the sun and the planets. All materials
+are used and the colors are tuned to be close to the actual color)
+
 ## How to build
 
 *Windows*
