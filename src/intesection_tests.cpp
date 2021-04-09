@@ -147,7 +147,7 @@ int main(int argc, char **argv) {
              false,
              none);
 
-    // 4. ray inside triangle
+    // 4. ray starting from triangle
     test_hit(t,
              ray(point3(1, 1, 0), vec3(0, 0, 1)),
              true,

@@ -77,7 +77,12 @@ public:
 
         glm::vec3 viewDir = normalize(viewPos - hit.p);
         glm::vec3 r = normalize(reflect(lightDir, unitn));
-        auto Is = ks * specColor * pow(dot(viewDir, r), shininess);
+        auto vr = dot(viewDir, r);
+        if (vr > 0) {
+            return false;
+        }
+
+        auto Is = ks * specColor * pow(vr, shininess);
 
         auto color = Ia + Id + Is;
 

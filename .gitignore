@@ -15,3 +15,4 @@ build
 *.swo
 .idea/
 cmake-build-debug/
+*.DS_Store
